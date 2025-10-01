@@ -53,7 +53,7 @@ NEO4J_USER=neo4j
 NEO4J_PASSWORD=your_password
 
 # Ollama
-OPENAI_API_BASE=http://127.0.0.1:11435/v1
+OPENAI_API_BASE=http://base.url
 OPENAI_API_KEY=ollama
 OPENAI_MODEL_MANAGER=gpt-oss:120b
 OPENAI_MODEL_SPECIALIST=gpt-oss:20b
@@ -142,11 +142,168 @@ STEP File → Parser → Multi-Agent System → Knowledge Graph → Neo4j
 
 **1. STEP parsing**
 
-Uses cadquery-ocp to extract:
-- assembly hierarchies
-- part geometries (vertices, edges, faces)
-- component metadata
-- naming and labeling
+STEP (STandard for the Exchange of Product model data) files are ISO 10303 format files that contain complete 3D CAD model information including geometry, topology, assembly structure, and metadata. cadKG uses cadquery-ocp (Python bindings for OpenCascade Technology) to parse these files.
+
+the parsing process (`scripts/step_parser.py`):
+
+**a. file loading**
+```python
+# read STEP file using OpenCascade XCAF (Extended CAF) framework
+doc = TDocStd_Document(TCollection_ExtendedString("XmlOcaf"))
+shape_tool = XCAFDoc_DocumentTool.ShapeTool_s(doc.Main())
+STEPCAFControl_Reader().ReadFile(step_file_path)
+```
+
+**b. assembly tree extraction**
+
+STEP files organize CAD data in a hierarchical tree structure. the parser walks this tree using OpenCascade's label system:
+
+- each node is a "label" in the XCAF document
+- labels can be assemblies (containers) or parts (leaf nodes)
+- labels reference shapes (geometric data) and have attributes (names, properties)
+
+```python
+# check if label is an assembly or simple shape
+is_assembly = ShapeTool.IsAssembly_s(label)
+is_simple = ShapeTool.IsSimpleShape_s(label)
+
+# get children for assemblies
+if is_assembly:
+    components = ShapeTool.GetComponents_s(label)
+```
+
+**c. geometry extraction**
+
+for each part with geometry, the parser extracts topological data:
+
+- **vertices**: 3D points (x, y, z coordinates)
+- **edges**: curves connecting vertices (lines, arcs, splines)
+- **faces**: surfaces bounded by edges (planes, cylinders, spheres)
+
+```python
+# get the shape geometry
+shape = ShapeTool.GetShape_s(label)
+
+# extract topological elements
+vertices = []
+for vertex in TopologyExplorer(shape).vertices():
+    point = BRep_Tool.Pnt_s(vertex)
+    vertices.append([point.X(), point.Y(), point.Z()])
+
+edges = list(TopologyExplorer(shape).edges())
+faces = list(TopologyExplorer(shape).faces())
+```
+
+**d. metadata extraction**
+
+part names and labels are stored as attributes on labels:
+
+```python
+# get name attribute
+name_attr = TDataStd_Name()
+if label.FindAttribute(TDataStd_Name.GetID_s(), name_attr):
+    name = name_attr.Get().ToExtString()
+```
+
+**e. assembly tree construction**
+
+the parser recursively traverses the label tree and builds a nested dictionary structure:
+
+```python
+{
+    "id": "label_1",
+    "name": "100-1_A1-ASSY",
+    "is_assembly": True,
+    "shape_type": "Assembly",
+    "level": 0,
+    "children": [
+        {
+            "id": "label_2",
+            "name": "091-1_A1-FRONT PANEL",
+            "is_assembly": False,
+            "shape_type": "Part",
+            "level": 1,
+            "geometry": {
+                "vertices": [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], ...],
+                "edges": 36,
+                "faces": 9
+            },
+            "children": []
+        },
+        ...
+    ]
+}
+```
+
+**f. output statistics**
+
+the parser reports:
+- total root shapes (typically 1 per file)
+- number of assemblies (containers with children)
+- number of parts (leaf nodes with geometry)
+- total components (assemblies + parts)
+
+**g. implementation details**
+
+the parser (`scripts/step_parser.py`) consists of several key functions:
+
+`parse_step_file(file_path)` - main entry point
+- initializes XCAF document
+- reads STEP file
+- extracts root shapes
+- traverses assembly tree
+- returns assembly data + statistics
+
+`_get_label_name(label)` - extracts part/assembly names
+- attempts to find TDataStd_Name attribute
+- falls back to generic naming if not found
+- handles special characters in names
+
+`_extract_geometry(shape)` - extracts topological data
+- uses TopologyExplorer to iterate over vertices/edges/faces
+- converts OpenCascade geometry to python lists
+- handles empty geometries gracefully
+
+`_process_label(label, shape_tool, level)` - recursive tree traversal
+- determines if label is assembly or part
+- extracts geometry for parts
+- recursively processes children
+- tracks depth level in tree
+
+`_is_component(label, shape_tool)` - distinguishes components from references
+- checks if label is a component (has parent assembly)
+- filters out reference labels that don't represent actual parts
+
+**h. key OpenCascade classes used**
+
+- `TDocStd_Document`: XCAF document container
+- `XCAFDoc_DocumentTool`: provides access to shape tools
+- `XCAFDoc_ShapeTool`: manages shapes and assemblies
+- `STEPCAFControl_Reader`: reads STEP files into XCAF
+- `TDataStd_Name`: attribute storing part names
+- `TopoDS_Shape`: base class for all geometric shapes
+- `TopologyExplorer`: iterates over topological entities
+- `BRep_Tool`: provides access to geometric data
+
+**i. handling complex assemblies**
+
+the parser handles various STEP assembly patterns:
+- nested assemblies (assemblies containing other assemblies)
+- multi-level hierarchies (depth tracking)
+- repeated components (same part used multiple times)
+- parts without geometry (reference-only components)
+- empty assemblies (containers with no children)
+
+example of complex nesting:
+```
+root assembly (level 0)
+├── subassembly A (level 1)
+│   ├── part 1 (level 2)
+│   ├── part 2 (level 2)
+│   └── subassembly B (level 2)
+│       └── part 3 (level 3)
+└── part 4 (level 1)
+```
 
 **2. data preparation**
 

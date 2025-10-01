@@ -263,7 +263,7 @@ verify specialist agents use the 20b model. check cache hit rate with `--stats-o
 
 **Neo4j connection errors**
 
-Verify Neo4j is running and credentials in `.env` are correct.
+verify Neo4j is running and credentials in `.env` are correct.
 
 ## development
 

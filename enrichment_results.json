@@ -1,0 +1,532 @@
+{
+  "document_analysis": {
+    "components": {
+      "components": [
+        {
+          "name": "CLINGERS docking system",
+          "type": "system",
+          "description": "A gender\u2011less docking platform that enables cooperative and communicative relative pose observation (RPO)."
+        },
+        {
+          "name": "Perspective\u2011n\u2011Point (PnP) Algorithm",
+          "type": "algorithm",
+          "description": "Uses IR LED arrays and an onboard camera to compute the position and orientation of each CLINGERS unit relative to the other."
+        },
+        {
+          "name": "RPO Docking Algorithm",
+          "type": "algorithm",
+          "description": "Executes a series of translations and reorientations to align two CLINGERS units within 2\u202fm using data from the PnP algorithm."
+        },
+        {
+          "name": "Client/Server Mode Table",
+          "type": "procedure",
+          "description": "Defines three operational modes (1, 2a, 2b) that specify which unit may translate or rotate during docking."
+        },
+        {
+          "name": "Onboard Raspberry\u202fPi\u202f4B",
+          "type": "hardware",
+          "description": "Single\u2011board computer that runs the CLINGERS firmware and hosts the main processing stack."
+        },
+        {
+          "name": "Custom Raspberry\u202fPi Hat PCB",
+          "type": "hardware",
+          "description": "PCB accessory for the Pi providing power management, driver interfaces, and sensor/actuator connections."
+        },
+        {
+          "name": "Bluetooth Module",
+          "type": "hardware",
+          "description": "Wireless module enabling peer\u2011to\u2011peer CLINGERS unit communication."
+        },
+        {
+          "name": "RJ45 Ethernet Port",
+          "type": "hardware",
+          "description": "Ethernet interface for firmware updates and telemetry, directly wired to the Raspberry\u202fPi."
+        },
+        {
+          "name": "Raspberry\u202fPi Camera Module X",
+          "type": "hardware",
+          "description": "Camera with infrared lens filter used for capturing the IR LED arrays during pose estimation."
+        },
+        {
+          "name": "Inner IR LED Array",
+          "type": "hardware",
+          "description": "Small ring of IR LEDs positioned inside the outer ring, part of the pose\u2011sensing system."
+        },
+        {
+          "name": "Outer IR LED Array",
+          "type": "hardware",
+          "description": "Bigger ring of IR LEDs surrounding the inner array, also used for pose estimation."
+        },
+        {
+          "name": "Tang Plate",
+          "type": "mechanical component",
+          "description": "Ultem 3\u2011D printed plate that rotates to align the docking interface during approach."
+        },
+        {
+          "name": "Stepper Motor",
+          "type": "actuator",
+          "description": "Drives the tang plate and facilitates precise rotational positioning."
+        },
+        {
+          "name": "Linear Actuator",
+          "type": "actuator",
+          "description": "Provides linear motion for docking assistance and optional cone mechanism."
+        },
+        {
+          "name": "Cone (Optional Docking Aid)",
+          "type": "mechanical component",
+          "description": "Optional shape that aids in aligning and securing the docking interface."
+        },
+        {
+          "name": "Astrobee HLP UART Interface",
+          "type": "communication interface",
+          "description": "Serial (UART) link between CLINGERS and Astrobee\u2019s High\u2011Level Processor for command and telemetry exchange."
+        },
+        {
+          "name": "GDS Telemetry Messages",
+          "type": "software interface",
+          "description": "Binary messages transmitted over UART to provide status and diagnostics to Astrobee."
+        },
+        {
+          "name": "JSON Settings",
+          "type": "software configuration",
+          "description": "Adjustable parameters (e.g., PnP gains, RPO thresholds) loaded via GDS commands."
+        },
+        {
+          "name": "Custom OS Commands",
+          "type": "software",
+          "description": "CLI commands that allow runtime alteration of code snippets or configuration."
+        },
+        {
+          "name": "3\u2011D Printed Ultem Front Half",
+          "type": "chassis component",
+          "description": "Front portion of the mechanical chassis, 3\u2011D printed from Ultem (PEI)."
+        },
+        {
+          "name": "3\u2011D Printed Ultem Back Half",
+          "type": "chassis component",
+          "description": "Rear portion of the mechanical chassis, 3\u2011D printed from Ultem."
+        },
+        {
+          "name": "3\u2011D Printed Ultem Lid",
+          "type": "chassis component",
+          "description": "Top cover of the chassis, sealed to protect internal electronics."
+        },
+        {
+          "name": "3\u2011D Printed TPU Front Cover",
+          "type": "chassis component",
+          "description": "Flexible front cover made from TPU, mounted over the lid."
+        },
+        {
+          "name": "3\u2011D Printed TPU Corner Bumpers",
+          "type": "chassis component",
+          "description": "Corner pieces glued to the lid to provide impact protection."
+        },
+        {
+          "name": "Inter\u2011Chassis Screws",
+          "type": "fastener",
+          "description": "General screws used to bolt front, back, and lid halves together."
+        },
+        {
+          "name": "Lock Nuts",
+          "type": "fastener",
+          "description": "Complementary nuts for lock screw assemblies."
+        },
+        {
+          "name": "Front Cover Screws",
+          "type": "fastener",
+          "description": "Screws that attach the TPU front cover to the lid."
+        },
+        {
+          "name": "Hex Nuts",
+          "type": "fastener",
+          "description": "Hexagonal nuts used with the front cover screws."
+        },
+        {
+          "name": "Lid Screws",
+          "type": "fastener",
+          "description": "Screws that secure the lid to the chassis."
+        },
+        {
+          "name": "Heat\u2011Set Inserts",
+          "type": "fastener",
+          "description": "Metal inserts soldered into plastic to accept threaded screws."
+        },
+        {
+          "name": "3\u2011D Printed Ultem Drum",
+          "type": "mechanical component",
+          "description": "Rotating drum that meshes with the tang plate during docking."
+        },
+        {
+          "name": "3\u2011D Printed Ultem Drum Ring",
+          "type": "mechanical component",
+          "description": "Ring that fits around the drum, providing a guide for the tang plate."
+        },
+        {
+          "name": "Krytox Lubricant",
+          "type": "lubricant",
+          "description": "Low\u2011viscosity silicone oil applied to the tang plate track to reduce friction."
+        },
+        {
+          "name": "20\u00b0 16\u2011Tooth Gear",
+          "type": "gear",
+          "description": "Gear that transmits torque from the stepper motor to the tang plate."
+        },
+        {
+          "name": "Ball Bearing",
+          "type": "bearing",
+          "description": "Mounted in the tang plate assembly to smooth rotational motion."
+        },
+        {
+          "name": "Ultem Locking Lever",
+          "type": "mechanical component",
+          "description": "Lever that locks the tang plate in place during docking."
+        },
+        {
+          "name": "CNC\u2011Milled Cast Iron Magnet",
+          "type": "magnet",
+          "description": "Magnet used in the locking lever mechanism to hold position."
+        },
+        {
+          "name": "Button Magnet",
+          "type": "magnet",
+          "description": "Magnet used in the toggle button of the locking lever."
+        },
+        {
+          "name": "3\u2011D Printed Ultem Mount",
+          "type": "electronic mount",
+          "description": "Mounting plate that holds the Raspberry Pi and hat PCB."
+        },
+        {
+          "name": "Custom Raspberry\u202fPi Hat PCB",
+          "type": "electronic component",
+          "description": "Printed circuit board that provides power regulation and sensor/actuator interfaces for the Pi."
+        },
+        {
+          "name": "3\u2011D Printed PLA Mount for Camera",
+          "type": "camera mount",
+          "description": "PLA holder that secures the Raspberry\u202fPi camera module."
+        },
+        {
+          "name": "3\u2011D Printed PLA Standoffs",
+          "type": "mounting hardware",
+          "description": "Standoffs used to position the camera module flush with the chassis."
+        },
+        {
+          "name": "Inner LED PCB",
+          "type": "printed circuit board",
+          "description": "PCB that hosts 4 IR LEDs for the inner array."
+        },
+        {
+          "name": "Outer LED PCB",
+          "type": "printed circuit board",
+          "description": "PCB that hosts 8 IR LEDs for the outer array."
+        },
+        {
+          "name": "Inner LED PCB Screws",
+          "type": "fastener",
+          "description": "Screws that attach the inner LED PCB to the chassis."
+        },
+        {
+          "name": "Outer LED PCB Screws",
+          "type": "fastener",
+          "description": "Screws that attach the outer LED PCB to the chassis."
+        },
+        {
+          "name": "Step\u2011Motor Assembly Screws",
+          "type": "fastener",
+          "description": "Screws that mount the stepper motor to its bracket."
+        },
+        {
+          "name": "Linear Actuator Assembly Screws",
+          "type": "fastener",
+          "description": "Screws that anchor the linear actuator to the mounting brackets."
+        },
+        {
+          "name": "Linear Actuator Tip (PLA)",
+          "type": "mechanical component",
+          "description": "PLA tip glued to the end of each linear actuator to interface with the docking mechanism."
+        },
+        {
+          "name": "Ultem Front & Back Mounting Brackets",
+          "type": "mount",
+          "description": "Ultem brackets that hold the linear actuators along the chassis."
+        },
+        {
+          "name": "Push Button Power Switch",
+          "type": "electrical component",
+          "description": "Manual on/off switch controlling the power supply to the Raspberry Pi."
+        },
+        {
+          "name": "31\u2011Pin Micro\u2011D Cable",
+          "type": "cable",
+          "description": "High\u2011speed serial cable used for onboard diagnostics and communication."
+        },
+        {
+          "name": "Male\u2011to\u2011Male CAT6 RJ45 Cable",
+          "type": "cable",
+          "description": "Cable that connects the RJ45 Ethernet port to external networking equipment."
+        },
+        {
+          "name": "Female CAT6 RJ45 Connector",
+          "type": "connector",
+          "description": "Connector that plugs into the external network cable."
+        },
+        {
+          "name": "5\u202fV DC Cooling Fan",
+          "type": "cooling system",
+          "description": "Passive or active fan providing thermal management for the Raspberry Pi and onboard electronics."
+        }
+      ]
+    },
+    "specifications": {
+      "specifications": [
+        {
+          "parameter": "Maximum docking distance",
+          "value": 2,
+          "unit": "m"
+        },
+        {
+          "parameter": "Number of inner IR LEDs",
+          "value": 4,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of outer IR LEDs",
+          "value": 8,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of stepper motors",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of linear actuators",
+          "value": 2,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of Raspberry Pi 4B units",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of Raspberry Pi Camera Modules",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Raspberry Pi camera IR filter size",
+          "value": 10,
+          "unit": "mm"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed Ultem front halves",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed Ultem back halves",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed Ultem lids",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed TPU front covers",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed TPU corner bumpers",
+          "value": 2,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of inter\u2011chassis screws",
+          "value": 10,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of inter\u2011chassis lock nuts",
+          "value": 10,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of front cover screws",
+          "value": 8,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of hex nuts for front cover",
+          "value": 16,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of lid screws",
+          "value": 6,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of heat\u2011set inserts for lid",
+          "value": 6,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed Ultem tang plates",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed Ultem drums",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of 3D\u2011printed Ultem drum rings",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Gauge of tang plate gear",
+          "value": 20,
+          "unit": "deg"
+        },
+        {
+          "parameter": "Number of teeth on tang plate gear",
+          "value": 16,
+          "unit": "teeth"
+        },
+        {
+          "parameter": "Number of ball bearings in tang plate assembly",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of locking levers",
+          "value": 2,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of CNC\u2011milled cast iron magnets",
+          "value": 4,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of button magnets",
+          "value": 4,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of set screws included with gear",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of copper heat\u2011set inserts (set screw)",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of micro\u2011D cable connectors (31\u2011pin)",
+          "value": 1,
+          "unit": "pcs"
+        },
+        {
+          "parameter": "Number of male\u2011to\u2011male CAT6 RJ45 cables",
+          "value": 1,
+          "unit": "pcs"
+        }
+      ]
+    },
+    "requirements": {
+      "requirements": [
+        {
+          "requirement": "Determine the relative pose of a CLINGERS unit to another unit within a 2\u2011meter approach distance using the PnP algorithm with inner and outer IR LED arrays and an onboard IR camera.",
+          "category": "Navigation / Pose Estimation",
+          "priority": "High"
+        },
+        {
+          "requirement": "Use the Astrobee system\u2019s orientation data to calculate the necessary reorientation maneuvers for aligning the two CLINGERS units\u2019 fields of view.",
+          "category": "Navigation / Pose Estimation",
+          "priority": "High"
+        },
+        {
+          "requirement": "Compute and transmit translation and rotation matrices to the Astrobee host system for execution of the docking sequence.",
+          "category": "Control / Communication",
+          "priority": "High"
+        },
+        {
+          "requirement": "Execute the docking sequence based on the RPO algorithm, performing translations and/or rotations as needed, with all operations completing when the units are within 2\u202fm of each other.",
+          "category": "Docking",
+          "priority": "High"
+        },
+        {
+          "requirement": "Support three distinct docking modes (Mode\u202f1, Mode\u202f2a, Mode\u202f2b) that define which unit is allowed to perform translations and rotations during docking.",
+          "category": "Docking / Mode Management",
+          "priority": "Medium"
+        },
+        {
+          "requirement": "Maintain a Bluetooth link between CLINGERS units for inter\u2011unit communication and synchronization during docking operations.",
+          "category": "Communication",
+          "priority": "High"
+        },
+        {
+          "requirement": "Provide an RJ45 Ethernet port that allows uploading firmware and configuration data directly to the onboard Raspberry\u202fPi\u202f4B during assembly or field deployment.",
+          "category": "Software Management / Deployment",
+          "priority": "Medium"
+        },
+        {
+          "requirement": "Interface with the Astrobee High\u2011Level Processor (HLP) via UART (serial) to send commands and receive telemetry data using the GDS protocol.",
+          "category": "Communication / External Interface",
+          "priority": "High"
+        },
+        {
+          "requirement": "Output docking telemetry, sensor status, and error messages to the Astrobee HLP via GDS messages.",
+          "category": "Communication / Telemetry",
+          "priority": "High"
+        },
+        {
+          "requirement": "Allow parameters of the PnP and RPO algorithms to be adjusted at runtime through JSON variables sent via GDS commands.",
+          "category": "Configuration / Runtime Tuning",
+          "priority": "Low"
+        },
+        {
+          "requirement": "Enable the execution of custom OS commands that modify small code snippets on demand for troubleshooting or reconfiguration.",
+          "category": "Configuration / Runtime Tuning",
+          "priority": "Low"
+        },
+        {
+          "requirement": "Employ a tang plate, stepper motor, and, optionally, a linear actuator with a cone docking aid to physically mate the two CLINGERS units.",
+          "category": "Docking / Mechanical",
+          "priority": "High"
+        },
+        {
+          "requirement": "Use the specified LED arrays (inner: 4 IR LEDs; outer: 8 IR LEDs) mounted on separate PCBs to provide the visual markers required by the PnP algorithm.",
+          "category": "Hardware / Sensors",
+          "priority": "High"
+        },
+        {
+          "requirement": "Provide a power\u2011on/off push\u2011button switch that safely controls the system\u2019s power state.",
+          "category": "Power Management",
+          "priority": "Medium"
+        },
+        {
+          "requirement": "Integrate a 5V DC cooling solution to maintain the Raspberry Pi and other electronics within their specified temperature envelope.",
+          "category": "Thermal Management",
+          "priority": "Medium"
+        }
+      ]
+    }
+  },
+  "graph_enrichment": {
+    "entity_matches": {},
+    "semantic_properties": {
+      "enrichments": []
+    }
+  }
+}

@@ -1,0 +1,62 @@
+====================================================================================================
+💻 CODEBASE ANALYSIS & GRAPHRAG PIPELINE
+====================================================================================================
+
+📋 Configuration:
+   Codebase: data/codebase
+   Neo4j URI: bolt://localhost:7687
+
+====================================================================================================
+📄 PHASE 1: PARSING CODEBASE
+====================================================================================================
+
+   ✅ Parsed 5 modules
+   📊 Codebase Statistics:
+      - Total lines: 2,848
+      - Total functions: 6
+      - Total classes: 9
+
+   📦 Modules:
+      - RPO: 675 lines, 5 funcs, 0 classes
+      - COMMS: 832 lines, 0 funcs, 3 classes
+      - TOOLS: 324 lines, 0 funcs, 6 classes
+      - PNP: 733 lines, 1 funcs, 0 classes
+      - CLINGERS_Master: 284 lines, 0 funcs, 0 classes
+
+====================================================================================================
+🤖 PHASE 2: AI-POWERED CODE ANALYSIS
+====================================================================================================
+   ✓ Code analyzer initialized with model: gpt-oss:20b
+
+   📊 Analyzing 5 modules...
+   🚀 Analyzing module: RPO
+      📝 Analyzing RPO...
+      🔗 Analyzing dependencies...
+Traceback (most recent call last):
+  File "/Users/rdz/Documents/edu/coursework/sercwerk/cadkg/scripts/code_module/code_pipeline.py", line 103, in <module>
+    main()
+  File "/Users/rdz/Documents/edu/coursework/sercwerk/cadkg/scripts/code_module/code_pipeline.py", line 72, in main
+    analyses = analyzer.analyze_codebase(modules, code_contents)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rdz/Documents/edu/coursework/sercwerk/cadkg/scripts/code_module/code_analyzer.py", line 277, in analyze_codebase
+    return asyncio.run(self.analyze_codebase_async(modules_data, code_contents))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rdz/.local/share/uv/python/cpython-3.12.3-macos-x86_64-none/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/rdz/.local/share/uv/python/cpython-3.12.3-macos-x86_64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rdz/.local/share/uv/python/cpython-3.12.3-macos-x86_64-none/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/rdz/Documents/edu/coursework/sercwerk/cadkg/scripts/code_module/code_analyzer.py", line 270, in analyze_codebase_async
+    analysis = await self.analyzer.analyze_module_async(module_data, code_content)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rdz/Documents/edu/coursework/sercwerk/cadkg/scripts/code_module/code_analyzer.py", line 224, in analyze_module_async
+    results = await asyncio.gather(*tasks)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rdz/Documents/edu/coursework/sercwerk/cadkg/scripts/code_module/code_analyzer.py", line 96, in analyze_functions
+    f"- {f['name']}({', '.join(f['args'])}): {f.get('docstring', 'no docstring')[:100]}"
+                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+TypeError: 'NoneType' object is not subscriptable

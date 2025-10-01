@@ -1,0 +1,113 @@
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The query used a deprecated function. ('id' has been replaced by 'elementId or consider using an application-generated id')} {position: line: 6, column: 24, offset: 218} for query: '\n                MATCH (m:CodeModule {id: $module_id})\n                MERGE (d:CodeModule {name: $dep_name})\n                MERGE (m)-[r:DEPENDS_ON]->(d)\n                SET r.type = $dep_type\n                RETURN id(r) as rel_id\n                '
+====================================================================================================
+💻 CODEBASE ANALYSIS & GRAPHRAG PIPELINE
+====================================================================================================
+
+📋 Configuration:
+   Codebase: data/codebase
+   Neo4j URI: bolt://localhost:7687
+
+====================================================================================================
+📄 PHASE 1: PARSING CODEBASE
+====================================================================================================
+
+   ✅ Parsed 5 modules
+   📊 Codebase Statistics:
+      - Total lines: 2,848
+      - Total functions: 6
+      - Total classes: 9
+
+   📦 Modules:
+      - RPO: 675 lines, 5 funcs, 0 classes
+      - COMMS: 832 lines, 0 funcs, 3 classes
+      - TOOLS: 324 lines, 0 funcs, 6 classes
+      - PNP: 733 lines, 1 funcs, 0 classes
+      - CLINGERS_Master: 284 lines, 0 funcs, 0 classes
+
+====================================================================================================
+🤖 PHASE 2: AI-POWERED CODE ANALYSIS
+====================================================================================================
+   ✓ Code analyzer initialized with model: gpt-oss:20b
+
+   📊 Analyzing 5 modules...
+   🚀 Analyzing module: RPO
+      📝 Analyzing RPO...
+      🔍 Analyzing 5 functions...
+      🔗 Analyzing dependencies...
+   🚀 Analyzing module: COMMS
+      📝 Analyzing COMMS...
+      📦 Analyzing 3 classes...
+      🔗 Analyzing dependencies...
+   🚀 Analyzing module: TOOLS
+      📝 Analyzing TOOLS...
+      📦 Analyzing 6 classes...
+      🔗 Analyzing dependencies...
+   🚀 Analyzing module: PNP
+      📝 Analyzing PNP...
+      🔍 Analyzing 1 functions...
+      🔗 Analyzing dependencies...
+   🚀 Analyzing module: CLINGERS_Master
+      📝 Analyzing CLINGERS_Master...
+      🔗 Analyzing dependencies...
+
+   ✅ Analysis complete for 5 modules
+
+====================================================================================================
+🔧 PHASE 3: ENRICHING KNOWLEDGE GRAPH
+====================================================================================================
+   🔧 Enriching knowledge graph with code analysis...
+   ✓ Created code constraint
+   ✓ Created code constraint
+   ✓ Created code constraint
+   ✓ Created code index
+   ✓ Created code index
+   ✓ Created code index
+   ✓ Created code index
+   ⚠️  Error creating function orientToTarget: dictionary update sequence element #0 has length 1; 2 is required
+   ⚠️  Error creating function reorientLoop: dictionary update sequence element #0 has length 1; 2 is required
+   ⚠️  Error creating function sync: dictionary update sequence element #0 has length 1; 2 is required
+   ⚠️  Error creating function movementComplete: dictionary update sequence element #0 has length 1; 2 is required
+   ⚠️  Error creating function rpo: dictionary update sequence element #0 has length 1; 2 is required
+
+   ✅ Code enrichment complete!
+      - Modules: 5
+      - Functions: 0
+      - Classes: 9
+      - Dependencies: 21
+
+====================================================================================================
+✅ CODEBASE ANALYSIS COMPLETE
+====================================================================================================
+
+   📊 Final Statistics:
+      - Code Modules: 5
+      - Functions: 0
+      - Classes: 9
+      - Dependencies: 21
+
+   🎉 GraphRAG system ready for code Q&A!
+
+   💡 Try asking questions:
+      python scripts/code_module/ask_question.py "What does the PNP module do?"
+      python scripts/code_module/ask_question.py "How does the motor control work?"
+

@@ -1,0 +1,128 @@
+====================================================================================================
+🚀 INTEGRATED CAD + DOCUMENTATION KNOWLEDGE GRAPH PIPELINE
+====================================================================================================
+
+📋 Configuration:
+   CAD File:     data/cad/100-1_A1-ASSY, PAYLOAD, CLINGERS.STEP
+   Doc File:     data/docs/CLINGERS_ecosystem.pdf
+   Neo4j URI:    bolt://localhost:7687
+   Clear graph:  True
+   Skip CAD AI:  True
+   Skip Doc AI:  False
+
+====================================================================================================
+📐 PHASE 1: CAD FILE PROCESSING
+====================================================================================================
+
+   🔍 Parsing STEP file: data/cad/100-1_A1-ASSY, PAYLOAD, CLINGERS.STEP
+
+   ✅ STEP file parsed successfully!
+   📊 Assembly Statistics:
+      - Total assemblies: 28
+      - Total parts: 475
+      - Total components: 502
+
+====================================================================================================
+🗄️  PHASE 2: CAD KNOWLEDGE GRAPH CREATION
+====================================================================================================
+
+   🔧 Initializing Neo4j schema...
+✓ Created constraint
+✓ Created constraint
+✓ Created constraint
+✓ Created constraint
+✓ Created index
+✓ Created index
+✓ Created index
+   🧹 Clearing existing graph data...
+✓ Graph cleared
+   📊 Populating knowledge graph from assembly tree...
+
+   ✅ Knowledge graph created!
+   📊 Graph Statistics:
+      - Part: 136
+      - Vertex: 836
+      - Assembly: 24
+      - Total relationships: 1006
+
+   ⏭️  Skipping CAD AI enrichment (--skip-cad-agent)
+
+====================================================================================================
+📄 PHASE 4: DOCUMENTATION PARSING
+====================================================================================================
+
+   📖 Parsing PDF: data/docs/CLINGERS_ecosystem.pdf
+
+   ✅ PDF parsed successfully!
+   📊 Document Statistics:
+      - Pages: 10
+      - Words: 1,421
+      - Tables: 0
+
+====================================================================================================
+🐝 PHASE 5: DOCUMENTATION AI ANALYSIS
+====================================================================================================
+
+   🔍 Retrieving CAD entities from graph...
+   ✓ Retrieved 100 CAD entities
+
+   🤖 Initializing documentation analyzer...
+   ✓ Initialized with model: gpt-oss:20b
+   ℹ️  Limiting document to 8000 characters for analysis
+   🚀 Running documentation analysis...
+   🚀 Running analysis with specialists...
+      🔍 Analyzing components...
+      📐 Extracting specifications...
+      📋 Extracting requirements...
+
+   ✅ Documentation analysis complete!
+      - Components: 25
+      - Specifications: 24
+      - Requirements: 21
+
+====================================================================================================
+🔧 PHASE 6: APPLYING ENRICHMENTS TO KNOWLEDGE GRAPH
+====================================================================================================
+   🔧 Applying enrichments to knowledge graph...
+   ✓ Created enrichment constraint
+   ✓ Created enrichment constraint
+   ✓ Created enrichment constraint
+   ✓ Created enrichment index
+   ✓ Created enrichment index
+   ✓ Created enrichment index
+   ✅ Enrichments applied:
+      - Semantic properties: 0
+      - Requirements: 21
+      - Specifications: 24
+      - Functions: 0
+      - Relationships: 0
+      - Documentation refs: 0
+
+   ✅ Graph enrichment applied!
+
+====================================================================================================
+✅ INTEGRATED PIPELINE COMPLETE
+====================================================================================================
+
+   📊 Final Knowledge Graph Statistics:
+      - Part: 136
+      - Vertex: 836
+      - Assembly: 24
+      - Requirement: 21
+      - Specification: 24
+      - Total relationships: 1006
+
+   🎉 Success! Your knowledge graph is now enriched with:
+      ✓ CAD assembly hierarchy and geometry
+      ✓ Semantic properties from documentation
+      ✓ Requirements and specifications
+      ✓ Functional relationships
+      ✓ Documentation references
+
+   💡 Next Steps:
+      - Open Neo4j Browser (http://localhost:7474)
+      - Run queries like:
+        MATCH (r:Requirement) RETURN r LIMIT 10
+        MATCH (p:Part)-[:IMPLEMENTS]->(r:Requirement) RETURN p, r
+        MATCH (p:Part) WHERE p.function IS NOT NULL RETURN p.name, p.function
+

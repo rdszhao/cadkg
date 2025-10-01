@@ -1,14 +1,12 @@
 # cadKG - CAD Knowledge Graph Constructor
 
-Multi-agent system for converting STEP CAD files into Neo4j knowledge graphs.
-
-## What is cadKG?
+multi-agent system for converting STEP CAD files into Neo4j knowledge graphs.
 
 cadKG parses STEP CAD files and uses a team of specialized AI agents to analyze the data and construct detailed knowledge graphs in Neo4j. Each agent focuses on a specific aspect of the CAD data (geometry, hierarchy, classification, etc.), and a coordinator agent synthesizes their findings into a unified graph.
 
-## Setup
+## setup
 
-### Prerequisites
+### prerequisites
 
 - Python 3.10+
 - Neo4j database
@@ -16,9 +14,9 @@ cadKG parses STEP CAD files and uses a team of specialized AI agents to analyze 
   - `gpt-oss:120b` (coordinator)
   - `gpt-oss:20b` (specialists)
 
-### Installation
+### installation
 
-1. **Install dependencies**
+1. **install dependencies**
 
 ```bash
 cd cadkg
@@ -32,21 +30,21 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 uv pip install -e .
 ```
 
-2. **Install Ollama models**
+2. **install ollama models**
 
 ```bash
 ollama pull gpt-oss:120b
 ollama pull gpt-oss:20b
 ```
 
-3. **Configure environment**
+3. **configure environment**
 
 ```bash
 cp .env.example .env
 # Edit .env with your settings
 ```
 
-Required environment variables:
+required environment variables:
 
 ```bash
 # Neo4j
@@ -64,124 +62,122 @@ OPENAI_MODEL_SPECIALIST=gpt-oss:20b
 STEP_FILE_PATH=data/your-file.STEP
 ```
 
-## Usage
+## usage
 
-### Run the pipeline
+### run the pipeline
 
-Process a STEP file and populate Neo4j:
+process a STEP file and populate Neo4j:
 
 ```bash
 python scripts/grapher.py --clear-graph
 ```
 
-This will:
+this will:
 1. Parse the STEP file
 2. Run multi-agent analysis
 3. Create and populate the Neo4j knowledge graph
 
-### Skip AI analysis
+### skip AI analysis
 
-For faster processing without agent enrichment:
+for faster processing without agent enrichment:
 
 ```bash
 python scripts/grapher.py --clear-graph --skip-agent
 ```
 
-### View file statistics only
+### view file statistics only
 
 ```bash
 python scripts/grapher.py --stats-only
 ```
 
-### Test the multi-agent system
+### test the multi-agent system
 
 ```bash
 python scripts/test_multiagent.py
 ```
 
-## How It Works
+## how it works
 
-### Architecture
+### architecture
 
 cadKG uses a **hub-and-spoke multi-agent architecture**:
 
 ```
                     ┌─────────────────────────┐
-                    │   Project Manager       │
+                    │   project manager       │
                     │   (gpt-oss:120b)        │
-                    │   Coordinates team      │
+                    │   coordinates team      │
                     └───────────┬─────────────┘
                                 │
             ┌───────────────────┼───────────────────┐
             │                   │                   │
     ┌───────▼───────┐   ┌──────▼──────┐   ┌───────▼───────┐
-    │   Geometry    │   │  Hierarchy  │   │  Component    │
-    │   Analyst     │   │   Mapper    │   │  Classifier   │
+    │   geometry    │   │  hierarchy  │   │  component    │
+    │   analyst     │   │   mapper    │   │  classifier   │
     └───────────────┘   └─────────────┘   └───────────────┘
     ┌───────────────┐   ┌─────────────┐
-    │   Spatial     │   │ Properties  │
-    │  Relations    │   │  Extractor  │
+    │   spatial     │   │ properties  │
+    │  relations    │   │  extractor  │
     └───────────────┘   └─────────────┘
 ```
 
-**Project Manager (120B model)**
-- Coordinates all specialist agents
-- Synthesizes their findings
-- Produces final knowledge graph structure
+**project manager (120B model)**
+- coordinates all specialist agents
+- synthesizes their findings
+- produces final knowledge graph structure
 
-**Specialist Agents (20B model)**
-- Geometry Analyst: Analyzes vertices, edges, faces, complexity
-- Hierarchy Mapper: Maps assembly structure and containment
-- Component Classifier: Categories parts (fasteners, structural, mechanical)
-- Spatial Relations Analyst: Identifies connections (FASTENS, ADJACENT_TO)
-- Properties Extractor: Extracts materials, vendors, sizes from labels
+**specialist agents (20B model)**
+- geometry analyst: analyzes vertices, edges, faces, complexity
+- hierarchy mapper: maps assembly structure and containment
+- component classifier: categories parts (fasteners, structural, mechanical)
+- spatial relations analyst: identifies connections (fastens, adjacent_to)
+- properties extractor: extracts materials, vendors, sizes from labels
 
-### Pipeline Flow
+### pipeline flow
 
 ```
 STEP File → Parser → Multi-Agent System → Knowledge Graph → Neo4j
 ```
 
-**1. STEP Parsing**
+**1. STEP parsing**
 
 Uses cadquery-ocp to extract:
-- Assembly hierarchies
-- Part geometries (vertices, edges, faces)
-- Component metadata
-- Naming and labeling
+- assembly hierarchies
+- part geometries (vertices, edges, faces)
+- component metadata
+- naming and labeling
 
-**2. Data Preparation**
+**2. data preparation**
 
-Chunks data for each specialist agent:
-- Geometry: 30 most complex parts
-- Components: 50 representative items
-- Hierarchy: Depth-limited to 3 levels
-- Spatial contexts: 15 assembly groups
-- Properties: 50 part labels
+chunks data for each specialist agent:
+- geometry: 30 most complex parts
+- components: 50 representative items
+- hierarchy: depth-limited to 3 levels
+- spatial contexts: 15 assembly groups
+- properties: 50 part labels
 
-**3. Multi-Agent Analysis**
+**3. multi-agent analysis**
 
-Each specialist receives focused data and analyzes independently:
+each specialist receives focused data and analyzes independently:
 
-- **Geometry Analyst**: Returns `{id, vertex_count, complexity, shape_hint}`
-- **Hierarchy Mapper**: Returns `{source, relation: "CONTAINS", target, depth}`
-- **Component Classifier**: Returns `{part_id, category, subcategory, standard}`
-- **Spatial Relations**: Returns `{source, relation, target, confidence}`
-- **Properties Extractor**: Returns `{part_id: {material, vendor, size}}`
+- **geometry analyst**: returns `{id, vertex_count, complexity, shape_hint}`
+- **hierarchy mapper**: returns `{source, relation: "CONTAINS", target, depth}`
+- **component classifier**: returns `{part_id, category, subcategory, standard}`
+- **spatial relations**: returns `{source, relation, target, confidence}`
+- **properties extractor**: returns `{part_id: {material, vendor, size}}`
 
-The Project Manager coordinates these analyses and produces a unified knowledge graph structure.
+the project manager coordinates these analyses and produces a unified knowledge graph structure.
 
-**4. Neo4j Population**
+**4. Neo4j population**
 
-Creates graph with:
-- **Nodes**: Assembly, Part, Vertex
-- **Relationships**: CONTAINS, HAS_GEOMETRY, HAS_VERTEX, FASTENS, etc.
-- Batch operations for efficiency
-- Idempotent MERGE operations
+creates graph with:
+- **nodes**: assembly, part, vertex
+- **relationships**: CONTAINS, HAS_GEOMETRY, HAS_VERTEX, FASTENS, etc.
 
-### Knowledge Graph Schema
+### knowledge graph schema
 
-**Nodes**
+**nodes**
 
 ```cypher
 (:Assembly {id, name, shape_type, level})
@@ -189,7 +185,7 @@ Creates graph with:
 (:Vertex:GeometricEntity {id, x, y, z})
 ```
 
-**Relationships**
+**relationships**
 
 ```cypher
 (:Assembly)-[:CONTAINS]->(:Assembly|Part)
@@ -199,16 +195,16 @@ Creates graph with:
 (:Part)-[:ADJACENT_TO]->(:Part)
 ```
 
-### Caching & Optimization
+### caching & optimization
 
-- **Result Caching**: MD5-based caching prevents redundant agent calls
-- **Progressive Chunking**: Limits context size per agent
-- **Multi-Model Strategy**: Fast 20B for specialists, powerful 120B for coordination
-- **Performance Monitoring**: Tracks execution time and cache hits
+- **result caching**: md5-based caching prevents redundant agent calls
+- **progressive chunking**: limits context size per agent
+- **multi-model strategy**: fast 20B for specialists, powerful 120B for coordination
+- **performance monitoring**: tracks execution time and cache hits
 
-## Querying the Knowledge Graph
+## querying the knowledge graph
 
-Once populated, query Neo4j with Cypher:
+once populated, query Neo4j with Cypher:
 
 ```cypher
 // View all assemblies
@@ -233,43 +229,43 @@ WHERE p.vendor = 'McMaster-Carr'
 RETURN p.name, p.standard
 ```
 
-## Project Structure
+## project structure
 
 ```
 cadkg/
 ├── scripts/
-│   ├── grapher.py           # Main pipeline orchestrator
-│   ├── agent.py             # Multi-agent system
+│   ├── grapher.py           # main pipeline orchestrator
+│   ├── agent.py             # multi-agent system
 │   ├── step_parser.py       # STEP file parser
 │   ├── neo4j_schema.py      # Neo4j schema & operations
-│   └── test_multiagent.py   # Test harness
+│   └── test_multiagent.py   # test harness
 ├── data/
-│   └── *.STEP               # CAD files
-├── .env                     # Configuration
-├── .env.example             # Config template
-├── pyproject.toml           # Dependencies
+│   └── *.step               # cad files
+├── .env                     # configuration
+├── .env.example             # config template
+├── pyproject.toml           # dependencies
 └── README.md
 ```
 
-## Troubleshooting
+## troubleshooting
 
-**Max turns exceeded**
+**max turns exceeded**
 
-The coordinator is making too many tool calls. Reduce data limits in `agent.py` preparation methods or increase `max_turns` parameter.
+the coordinator is making too many tool calls. reduce data limits in `agent.py` preparation methods or increase `max_turns` parameter.
 
 **JSON extraction errors**
 
-Agent output isn't valid JSON. Check agent instructions emphasize JSON-only responses.
+agent output isn't valid json. check agent instructions emphasize json-only responses.
 
-**Slow performance**
+**slow performance**
 
-Verify specialist agents use the 20B model. Check cache hit rate with `--stats-only`.
+verify specialist agents use the 20b model. check cache hit rate with `--stats-only`.
 
 **Neo4j connection errors**
 
 Verify Neo4j is running and credentials in `.env` are correct.
 
-## Development
+## development
 
 ### Adding a new specialist agent
 
@@ -278,9 +274,9 @@ Verify Neo4j is running and credentials in `.env` are correct.
 ```python
 def _create_new_specialist(self) -> Agent:
     return Agent(
-        name="New Specialist",
+        name="new specialist",
         model=self.specialist_model,
-        instructions="Focus only on X. Return JSON: {...}"
+        instructions="focus only on X. Return JSON: {...}"
     )
 ```
 
@@ -289,15 +285,15 @@ def _create_new_specialist(self) -> Agent:
 ```python
 @function_tool
 async def analyze_new_aspect() -> str:
-    """Analyzes specific aspect of CAD data."""
+    """analyzes specific aspect of cad data."""
     return await self._run_specialist_with_monitoring(...)
 ```
 
-3. Add data preparation:
+3. add data preparation:
 
 ```python
 def _prepare_new_data(self, step_data):
-    # Extract and limit relevant data
+    # extract and limit relevant data
     return filtered_data[:limit]
 ```
 

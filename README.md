@@ -1,217 +1,315 @@
-# cadKG
+# cadKG - CAD Knowledge Graph Constructor
 
-A Python-based system that extracts information from STEP CAD files and constructs a knowledge graph in Neo4j using OpenAI-Agents SDK
+Multi-agent system for converting STEP CAD files into Neo4j knowledge graphs.
 
-## Features
+## What is cadKG?
 
-- **STEP File Parsing**: Extracts geometric and assembly information from STEP (ISO 10303) files using OpenCascade
-- **AI-Powered Analysis**: Uses OpenAI Agents SDK to analyze and structure CAD data with specialized agents
-- **Knowledge Graph Construction**: Automatically builds a hierarchical knowledge graph in Neo4j
-- **Rich Schema**: Captures assemblies, parts, geometric entities, and their relationships
+cadKG parses STEP CAD files and uses a team of specialized AI agents to analyze the data and construct detailed knowledge graphs in Neo4j. Each agent focuses on a specific aspect of the CAD data (geometry, hierarchy, classification, etc.), and a coordinator agent synthesizes their findings into a unified graph.
 
-## Prerequisites
+## Setup
 
-- Python 3.12+
-- Neo4j database (local or remote)
-- OpenAI API key
+### Prerequisites
 
-## Installation
+- Python 3.10+
+- Neo4j database
+- Ollama with GPT-OSS models:
+  - `gpt-oss:120b` (coordinator)
+  - `gpt-oss:20b` (specialists)
 
-1. Clone the repository and navigate to the project directory
+### Installation
 
-2. Install dependencies using uv:
+1. **Install dependencies**
+
 ```bash
-uv sync
+cd cadkg
+
+# Install uv package manager if needed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create virtual environment and install
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -e .
 ```
 
-3. Create a `.env` file based on `.env.example`:
+2. **Install Ollama models**
+
+```bash
+ollama pull gpt-oss:120b
+ollama pull gpt-oss:20b
+```
+
+3. **Configure environment**
+
 ```bash
 cp .env.example .env
+# Edit .env with your settings
 ```
 
-4. Configure your `.env` file:
+Required environment variables:
+
 ```bash
-# Neo4j Configuration
+# Neo4j
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=your_password
 
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key
+# Ollama
+OPENAI_API_BASE=http://127.0.0.1:11435/v1
+OPENAI_API_KEY=ollama
+OPENAI_MODEL_MANAGER=gpt-oss:120b
+OPENAI_MODEL_SPECIALIST=gpt-oss:20b
 
-# STEP File Configuration
-STEP_FILE_PATH=filepath
+# STEP file
+STEP_FILE_PATH=data/your-file.STEP
 ```
 
 ## Usage
 
-### Basic Usage
+### Run the pipeline
 
-Process a STEP file and create a knowledge graph:
+Process a STEP file and populate Neo4j:
 
 ```bash
-python scripts/grapher.py
+python scripts/grapher.py --clear-graph
 ```
 
-### Command Line Options
+This will:
+1. Parse the STEP file
+2. Run multi-agent analysis
+3. Create and populate the Neo4j knowledge graph
+
+### Skip AI analysis
+
+For faster processing without agent enrichment:
 
 ```bash
-# Use a different STEP file
-python scripts/grapher.py --step-file path/to/your/file.STEP
+python scripts/grapher.py --clear-graph --skip-agent
+```
 
-# Clear existing graph data before loading
-python scripts/grapher.py --clear-graph
+### View file statistics only
 
-# Skip AI agent enrichment (faster, direct mapping)
-python scripts/grapher.py --skip-agent
-
-# Use a different OpenAI model
-python scripts/grapher.py --model gpt-4o
-
-# Only show statistics without populating graph
+```bash
 python scripts/grapher.py --stats-only
-
-# Override Neo4j connection
-python scripts/grapher.py --neo4j-uri bolt://localhost:7687 --neo4j-user neo4j --neo4j-password password
 ```
 
-### Example Workflow
+### Test the multi-agent system
 
-1. **Start Neo4j** 
 ```bash
-docker run -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/password neo4j:latest
+python scripts/test_multiagent.py
 ```
 
-2. **Run the pipeline**:
-```bash
-# First time: clear any existing data and use AI agent
-python scripts/grapher.py --clear-graph
+## How It Works
 
-# Subsequent runs: just add new data
-python scripts/grapher.py
+### Architecture
+
+cadKG uses a **hub-and-spoke multi-agent architecture**:
+
+```
+                    ┌─────────────────────────┐
+                    │   Project Manager       │
+                    │   (gpt-oss:120b)        │
+                    │   Coordinates team      │
+                    └───────────┬─────────────┘
+                                │
+            ┌───────────────────┼───────────────────┐
+            │                   │                   │
+    ┌───────▼───────┐   ┌──────▼──────┐   ┌───────▼───────┐
+    │   Geometry    │   │  Hierarchy  │   │  Component    │
+    │   Analyst     │   │   Mapper    │   │  Classifier   │
+    └───────────────┘   └─────────────┘   └───────────────┘
+    ┌───────────────┐   ┌─────────────┐
+    │   Spatial     │   │ Properties  │
+    │  Relations    │   │  Extractor  │
+    └───────────────┘   └─────────────┘
 ```
 
-3. **Explore the graph**:
-- Open Neo4j Browser: http://localhost:7474
-- Run sample queries (see below)
+**Project Manager (120B model)**
+- Coordinates all specialist agents
+- Synthesizes their findings
+- Produces final knowledge graph structure
 
-## Neo4j Queries
+**Specialist Agents (20B model)**
+- Geometry Analyst: Analyzes vertices, edges, faces, complexity
+- Hierarchy Mapper: Maps assembly structure and containment
+- Component Classifier: Categories parts (fasteners, structural, mechanical)
+- Spatial Relations Analyst: Identifies connections (FASTENS, ADJACENT_TO)
+- Properties Extractor: Extracts materials, vendors, sizes from labels
 
-### View Assembly Hierarchy
-```cypher
-MATCH p=(a:Assembly)-[:CONTAINS*]->(child)
-RETURN p LIMIT 50
+### Pipeline Flow
+
+```
+STEP File → Parser → Multi-Agent System → Knowledge Graph → Neo4j
 ```
 
-### Find All Parts with Geometry
-```cypher
-MATCH (p:Part)-[:HAS_GEOMETRY]->(v:Vertex)
-RETURN p.name, p.edge_count, p.face_count, count(v) as vertex_count
-ORDER BY vertex_count DESC
-```
+**1. STEP Parsing**
 
-### Find Top-Level Assemblies
-```cypher
-MATCH (a:Assembly)
-WHERE NOT (()-[:CONTAINS]->(a))
-RETURN a.name, a.id
-```
+Uses cadquery-ocp to extract:
+- Assembly hierarchies
+- Part geometries (vertices, edges, faces)
+- Component metadata
+- Naming and labeling
 
-### Get Full Part Details
-```cypher
-MATCH (p:Part {name: 'YourPartName'})
-OPTIONAL MATCH (p)-[:HAS_GEOMETRY]->(v:Vertex)
-RETURN p, collect(v) as vertices
-```
+**2. Data Preparation**
 
-### Find Components by Level
-```cypher
-MATCH (n)
-WHERE n.level = 2
-RETURN n.name, labels(n), n.shape_type
-```
+Chunks data for each specialist agent:
+- Geometry: 30 most complex parts
+- Components: 50 representative items
+- Hierarchy: Depth-limited to 3 levels
+- Spatial contexts: 15 assembly groups
+- Properties: 50 part labels
 
-## Architecture
+**3. Multi-Agent Analysis**
 
-### Modules
+Each specialist receives focused data and analyzes independently:
 
-- **`step_parser.py`**: STEP file parser using OpenCascade (OCP)
-  - Extracts assembly hierarchy
-  - Parses geometric entities (vertices, edges, faces, solids)
-  - Generates structured data
+- **Geometry Analyst**: Returns `{id, vertex_count, complexity, shape_hint}`
+- **Hierarchy Mapper**: Returns `{source, relation: "CONTAINS", target, depth}`
+- **Component Classifier**: Returns `{part_id, category, subcategory, standard}`
+- **Spatial Relations**: Returns `{source, relation, target, confidence}`
+- **Properties Extractor**: Returns `{part_id: {material, vendor, size}}`
 
-- **`agent.py`**: OpenAI Agents SDK system with specialized agents
-  - Analyzes assembly structure
-  - Extracts entities and relationships
-  - Enriches data with AI-powered insights
-  - Uses Agent/Runner pattern with fallback mechanisms
+The Project Manager coordinates these analyses and produces a unified knowledge graph structure.
 
-- **`neo4j_schema.py`**: Neo4j knowledge graph schema and operations
-  - Defines node types (Assembly, Part, Vertex, etc.)
-  - Creates relationships (CONTAINS, HAS_GEOMETRY, etc.)
-  - Provides query utilities
+**4. Neo4j Population**
 
-- **`grapher.py`**: Main orchestration script
-  - Coordinates the full pipeline
-  - Handles configuration and CLI arguments
-  - Reports statistics and results
+Creates graph with:
+- **Nodes**: Assembly, Part, Vertex
+- **Relationships**: CONTAINS, HAS_GEOMETRY, HAS_VERTEX, FASTENS, etc.
+- Batch operations for efficiency
+- Idempotent MERGE operations
 
 ### Knowledge Graph Schema
 
-**Node Types:**
-- `Assembly`: Top-level assemblies and sub-assemblies
-- `Part`: Individual CAD parts
-- `Vertex`: Geometric vertices (3D points)
-- `GeometricEntity`: Base type for geometric elements
+**Nodes**
 
-**Relationships:**
-- `CONTAINS`: Hierarchical parent-child relationship
-- `HAS_GEOMETRY`: Links parts to their geometric entities
-
-**Properties:**
-- Name, ID, level in hierarchy
-- Shape type (SOLID, SHELL, FACE, etc.)
-- Geometric counts (edges, faces, vertices)
-- 3D coordinates for vertices
-
-## Development
-
-### Running Tests
-```bash
-# Add test dependencies
-uv add --dev pytest
-
-# Run tests
-pytest
+```cypher
+(:Assembly {id, name, shape_type, level})
+(:Part {id, name, shape_type, level, vertex_count?, category?, material?})
+(:Vertex:GeometricEntity {id, x, y, z})
 ```
 
-### Adding New Features
+**Relationships**
 
-The modular architecture makes it easy to extend:
+```cypher
+(:Assembly)-[:CONTAINS]->(:Assembly|Part)
+(:Part)-[:HAS_GEOMETRY]->(:Part)
+(:Part)-[:HAS_VERTEX]->(:Vertex)
+(:Part)-[:FASTENS]->(:Part)
+(:Part)-[:ADJACENT_TO]->(:Part)
+```
 
-1. **New STEP entity types**: Update `step_parser.py`
-2. **New relationship types**: Update `neo4j_schema.py`
-3. **Enhanced AI analysis**: Update `agent.py`
+### Caching & Optimization
+
+- **Result Caching**: MD5-based caching prevents redundant agent calls
+- **Progressive Chunking**: Limits context size per agent
+- **Multi-Model Strategy**: Fast 20B for specialists, powerful 120B for coordination
+- **Performance Monitoring**: Tracks execution time and cache hits
+
+## Querying the Knowledge Graph
+
+Once populated, query Neo4j with Cypher:
+
+```cypher
+// View all assemblies
+MATCH (a:Assembly) RETURN a LIMIT 25
+
+// View assembly hierarchy
+MATCH p=(a:Assembly)-[:CONTAINS*]->(child)
+RETURN p LIMIT 50
+
+// Find parts with geometry
+MATCH (p:Part)-[:HAS_GEOMETRY]->(g)
+RETURN p.name, p.vertex_count
+ORDER BY p.vertex_count DESC
+
+// Find fastening relationships
+MATCH (p1:Part)-[r:FASTENS]->(p2:Part)
+RETURN p1.name, p2.name, r.confidence
+
+// Find standard parts by vendor
+MATCH (p:Part)
+WHERE p.vendor = 'McMaster-Carr'
+RETURN p.name, p.standard
+```
+
+## Project Structure
+
+```
+cadkg/
+├── scripts/
+│   ├── grapher.py           # Main pipeline orchestrator
+│   ├── agent.py             # Multi-agent system
+│   ├── step_parser.py       # STEP file parser
+│   ├── neo4j_schema.py      # Neo4j schema & operations
+│   └── test_multiagent.py   # Test harness
+├── data/
+│   └── *.STEP               # CAD files
+├── .env                     # Configuration
+├── .env.example             # Config template
+├── pyproject.toml           # Dependencies
+└── README.md
+```
 
 ## Troubleshooting
 
-### OpenCascade Import Errors
-If you see import errors for OCP:
-```bash
-uv add OCP --force-reinstall
+**Max turns exceeded**
+
+The coordinator is making too many tool calls. Reduce data limits in `agent.py` preparation methods or increase `max_turns` parameter.
+
+**JSON extraction errors**
+
+Agent output isn't valid JSON. Check agent instructions emphasize JSON-only responses.
+
+**Slow performance**
+
+Verify specialist agents use the 20B model. Check cache hit rate with `--stats-only`.
+
+**Neo4j connection errors**
+
+Verify Neo4j is running and credentials in `.env` are correct.
+
+## Development
+
+### Adding a new specialist agent
+
+1. Create agent in `agent.py`:
+
+```python
+def _create_new_specialist(self) -> Agent:
+    return Agent(
+        name="New Specialist",
+        model=self.specialist_model,
+        instructions="Focus only on X. Return JSON: {...}"
+    )
 ```
 
-### Neo4j Connection Issues
-- Verify Neo4j is running: `neo4j status`
-- Check connection details in `.env`
-- Ensure ports 7474 (HTTP) and 7687 (Bolt) are accessible
+2. Add tool wrapper:
 
-### Large STEP Files
-For very large files:
-- Use `--skip-agent` to avoid LLM token limits
-- Consider processing in chunks
-- Increase Neo4j memory configuration
+```python
+@function_tool
+async def analyze_new_aspect() -> str:
+    """Analyzes specific aspect of CAD data."""
+    return await self._run_specialist_with_monitoring(...)
+```
+
+3. Add data preparation:
+
+```python
+def _prepare_new_data(self, step_data):
+    # Extract and limit relevant data
+    return filtered_data[:limit]
+```
+
+4. Update Project Manager tools list
 
 ## License
 
-MIT
+[Your License]
+
+## Links
+
+- [Neo4j Documentation](https://neo4j.com/docs/)
+- [cadquery-ocp](https://github.com/CadQuery/cadquery-ocp)
+- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
+- [Ollama](https://ollama.ai/)

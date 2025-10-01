@@ -303,10 +303,6 @@ def _prepare_new_data(self, step_data):
 
 4. Update Project Manager tools list
 
-## License
-
-[Your License]
-
 ## Links
 
 - [Neo4j Documentation](https://neo4j.com/docs/)

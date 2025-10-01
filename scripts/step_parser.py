@@ -50,7 +50,7 @@ class STEPParser:
             print(f"Error reading STEP file: {self.file_path}")
             return False
 
-        # Transfer the file content to the document
+        # transfer file content to document
         app = XCAFApp_Application.GetApplication_s()
         self.doc = TDocStd_Document(TCollection_ExtendedString("XmlOcaf"))
         app.InitDocument(self.doc)
@@ -59,11 +59,11 @@ class STEPParser:
             print("Error transferring STEP data to document")
             return False
 
-        # Get shape and color tools
+        # shape and color tools
         self.shape_tool = XCAFDoc_DocumentTool.ShapeTool_s(self.doc.Main())
         self.color_tool = XCAFDoc_DocumentTool.ColorTool_s(self.doc.Main())
 
-        # Get root shapes (assemblies)
+        # get root shapes (assemblies)
         free_shapes = TDF_LabelSequence()
         self.shape_tool.GetFreeShapes(free_shapes)
 
@@ -98,17 +98,17 @@ class STEPParser:
         Returns:
             Dictionary containing label information
         """
-        # Get shape using static method
+        # get shape using static method
         from OCP.XCAFDoc import XCAFDoc_ShapeTool as ShapeTool
         shape = ShapeTool.GetShape_s(label)
 
-        # Get name
+        # get name
         name = self._get_label_name(label)
 
-        # Generate unique ID
+        # generate unique id
         label_id = f"label_{label.Tag()}"
 
-        # Check if it's an assembly or a simple part (use static methods)
+        # check if assembly or simple part
         is_assembly = ShapeTool.IsAssembly_s(label)
         is_simple_shape = ShapeTool.IsSimpleShape_s(label)
         is_component = ShapeTool.IsComponent_s(label)
@@ -125,20 +125,20 @@ class STEPParser:
             "children": [],
         }
 
-        # If it's an assembly, get its components
+        # if assembly, get components
         if is_assembly:
             components = TDF_LabelSequence()
             ShapeTool.GetComponents_s(label, components)
 
             for i in range(1, components.Length() + 1):
                 component_label = components.Value(i)
-                # Get the referred shape
+                # get referred shape
                 referred_label = TDF_Label()
                 if ShapeTool.GetReferredShape_s(component_label, referred_label):
                     child_info = self._extract_label_info(referred_label, level + 1, label_id)
                     info["children"].append(child_info)
 
-        # Extract geometric properties for simple shapes
+        # extract geometric properties for simple shapes
         if is_simple_shape and not is_assembly:
             info["geometry"] = self._extract_geometry_info(shape)
 
@@ -155,7 +155,7 @@ class STEPParser:
         """
         from OCP.TDataStd import TDataStd_Name
 
-        # Try to find a name attribute
+        # try to find a name attribute
         name_attr = TDataStd_Name()
         if label.FindAttribute(TDataStd_Name.GetID_s(), name_attr):
             return name_attr.Get().ToExtString()
@@ -203,7 +203,7 @@ class STEPParser:
             "volume_exists": False,
         }
 
-        # Count and extract vertices
+        # count + extract vertices
         vertex_explorer = TopExp_Explorer(shape, TopAbs_ShapeEnum.TopAbs_VERTEX)
         while vertex_explorer.More():
             vertex = TopoDS.Vertex_s(vertex_explorer.Current())
@@ -215,7 +215,7 @@ class STEPParser:
             })
             vertex_explorer.Next()
 
-        # Count edges
+        # count edges
         edge_explorer = TopExp_Explorer(shape, TopAbs_ShapeEnum.TopAbs_EDGE)
         edge_count = 0
         while edge_explorer.More():
@@ -223,7 +223,7 @@ class STEPParser:
             edge_explorer.Next()
         geometry["edges"] = edge_count
 
-        # Count faces
+        # count faces
         face_explorer = TopExp_Explorer(shape, TopAbs_ShapeEnum.TopAbs_FACE)
         face_count = 0
         while face_explorer.More():
@@ -231,7 +231,7 @@ class STEPParser:
             face_explorer.Next()
         geometry["faces"] = face_count
 
-        # Check for solids
+        # check for solids
         solid_explorer = TopExp_Explorer(shape, TopAbs_ShapeEnum.TopAbs_SOLID)
         if solid_explorer.More():
             geometry["volume_exists"] = True
@@ -252,7 +252,7 @@ class STEPParser:
             "total_components": 0,
         }
 
-        # Count assemblies and parts
+        # count assemblies + parts
         for root_label in self.root_shapes:
             self._count_shapes(root_label, stats)
 

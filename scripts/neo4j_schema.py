@@ -33,7 +33,7 @@ class CADKnowledgeGraph:
     def initialize_schema(self):
         """Initialize the Neo4j schema with constraints and indexes."""
         with self.driver.session() as session:
-            # Create constraints for unique IDs
+            # constraints for unique ids
             constraints = [
                 "CREATE CONSTRAINT assembly_id IF NOT EXISTS FOR (a:Assembly) REQUIRE a.id IS UNIQUE",
                 "CREATE CONSTRAINT part_id IF NOT EXISTS FOR (p:Part) REQUIRE p.id IS UNIQUE",
@@ -48,7 +48,7 @@ class CADKnowledgeGraph:
                 except Exception as e:
                     print(f"Note: Constraint may already exist - {str(e)[:50]}")
 
-            # Create indexes for performance
+            # indexes for performance
             indexes = [
                 "CREATE INDEX assembly_name IF NOT EXISTS FOR (a:Assembly) ON (a.name)",
                 "CREATE INDEX part_name IF NOT EXISTS FOR (p:Part) ON (p.name)",
@@ -109,7 +109,7 @@ class CADKnowledgeGraph:
             ID of the created part node
         """
         with self.driver.session() as session:
-            # Base properties
+            # base properties
             props = {
                 "id": part_data["id"],
                 "name": part_data["name"],
@@ -117,7 +117,7 @@ class CADKnowledgeGraph:
                 "shape_type": part_data.get("shape_type", "UNKNOWN"),
             }
 
-            # Add geometric properties if available
+            # add geometric properties if available
             if "geometry" in part_data:
                 geom = part_data["geometry"]
                 props["edge_count"] = geom.get("edges", 0)
@@ -125,7 +125,7 @@ class CADKnowledgeGraph:
                 props["vertex_count"] = len(geom.get("vertices", []))
                 props["has_volume"] = geom.get("volume_exists", False)
             else:
-                # Set defaults if no geometry
+                # defaults if no geometry
                 props["edge_count"] = 0
                 props["face_count"] = 0
                 props["vertex_count"] = 0
@@ -164,12 +164,12 @@ class CADKnowledgeGraph:
         Returns:
             List of created vertex IDs
         """
-        # Skip if too many vertices to avoid slowdown
+        # skip if too many vertices to avoid slowdown
         if len(vertices) > 100:
             return []
 
         with self.driver.session() as session:
-            # Prepare batch data
+            # prepare batch data
             vertex_data = []
             vertex_ids = []
             for idx, vertex in enumerate(vertices):
@@ -182,7 +182,7 @@ class CADKnowledgeGraph:
                     "z": vertex["z"]
                 })
 
-            # Create all vertices in a single query using UNWIND
+            # create all vertices in a single query using unwind
             query = """
             UNWIND $vertices AS v
             MERGE (vertex:Vertex:GeometricEntity {id: v.id})
@@ -254,7 +254,7 @@ class CADKnowledgeGraph:
             node: Node dictionary from STEP parser
             parent_id: ID of the parent node (None for root)
         """
-        # Determine node type and create appropriate node
+        # determine node type and create appropriate node
         if node["is_assembly"]:
             node_id = self.create_assembly_node(node)
         else:
@@ -267,11 +267,11 @@ class CADKnowledgeGraph:
                 if vertex_ids:
                     self._batch_create_geometry_relationships(node_id, vertex_ids)
 
-        # Create relationship to parent if exists
+        # create relationship to parent if exists
         if parent_id:
             self.create_contains_relationship(parent_id, node_id)
 
-        # Process children recursively
+        # process children recursively
         for child in node.get("children", []):
             self._process_node(child, parent_id=node_id)
 
@@ -282,7 +282,7 @@ class CADKnowledgeGraph:
             Dictionary containing graph statistics
         """
         with self.driver.session() as session:
-            # Count nodes by type
+            # count nodes by type
             node_counts = session.run("""
                 MATCH (n)
                 RETURN labels(n)[0] as label, count(n) as count
@@ -293,7 +293,7 @@ class CADKnowledgeGraph:
                 if record["label"]:
                     stats["nodes"][record["label"]] = record["count"]
 
-            # Count relationships
+            # count relationships
             rel_count = session.run("MATCH ()-[r]->() RETURN count(r) as count")
             stats["relationships"] = rel_count.single()["count"]
 

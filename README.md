@@ -1,6 +1,6 @@
-# Caddie
+# cadKG
 
-A Python-based system that extracts information from STEP CAD files and constructs a knowledge graph in Neo4j using OpenAI-powered agents.
+A Python-based system that extracts information from STEP CAD files and constructs a knowledge graph in Neo4j using OpenAI-Agents SDK
 
 ## Features
 
@@ -40,7 +40,7 @@ NEO4J_PASSWORD=your_password
 OPENAI_API_KEY=your_openai_api_key
 
 # STEP File Configuration
-STEP_FILE_PATH=data/100-1_A1-ASSY, PAYLOAD, CLINGERS.STEP
+STEP_FILE_PATH=filepath
 ```
 
 ## Usage
@@ -77,12 +77,9 @@ python scripts/grapher.py --neo4j-uri bolt://localhost:7687 --neo4j-user neo4j -
 
 ### Example Workflow
 
-1. **Start Neo4j** (if running locally):
+1. **Start Neo4j** 
 ```bash
-# Using Docker
 docker run -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/password neo4j:latest
-
-# Or use Neo4j Desktop
 ```
 
 2. **Run the pipeline**:
@@ -218,7 +215,3 @@ For very large files:
 ## License
 
 MIT
-
-## Contributing
-
-Contributions welcome! Please open an issue or submit a PR.

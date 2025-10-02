@@ -66,16 +66,31 @@ OPENAI_MODEL_MANAGER=gpt-oss:120b
 OPENAI_MODEL_SPECIALIST=gpt-oss:20b
 
 # Data Sources
-STEP_FILE_PATH=data/cad/your-file.STEP
-DOC_FILE_PATH=data/docs/your-document.pdf
+STEP_FILE_PATH=data/cad/your-assembly.STEP
+DOC_FILE_PATH=data/docs/your-documentation.pdf
 CODEBASE_PATH=data/codebase
 ```
 
 ## usage
 
-### complete integrated pipeline
+### complete pipeline (recommended)
 
-process CAD, documentation, and code together:
+run the entire pipeline with one command:
+
+```bash
+# Run complete pipeline
+.venv/bin/python scripts/run_complete_pipeline.py
+
+# Run and launch chat interface automatically
+.venv/bin/python scripts/run_complete_pipeline.py --launch-chat
+
+# Skip code analysis for faster execution (~2 minutes instead of ~7 minutes)
+.venv/bin/python scripts/run_complete_pipeline.py --skip-code
+```
+
+### manual step-by-step pipeline
+
+process CAD, documentation, and code separately:
 
 ```bash
 # 1. Parse CAD and create initial graph
@@ -94,7 +109,7 @@ ask questions across all three domains:
 
 ```bash
 # Single question
-.venv/bin/python scripts/unified_graphrag.py "What is the CLINGERS system?"
+.venv/bin/python scripts/unified_graphrag.py "What is the system architecture?"
 
 # Interactive mode
 .venv/bin/python scripts/unified_graphrag.py --interactive
@@ -103,11 +118,22 @@ ask questions across all three domains:
 .venv/bin/python scripts/unified_graphrag.py --demo
 ```
 
-example questions the system can answer:
-- "What is the CLINGERS system and how does its hardware relate to the software?"
-- "How do the PNP algorithm and the CAD parts relate?"
-- "What requirements does the motor assembly satisfy?"
-- "What does the RPO module do and which hardware does it control?"
+### gradio chat interface
+
+launch a web-based chat interface:
+
+```bash
+# Launch locally
+.venv/bin/python scripts/chat_interface.py
+
+# Launch with public sharing link
+.venv/bin/python scripts/chat_interface.py --share
+
+# Use different port
+.venv/bin/python scripts/chat_interface.py --port 8080
+```
+
+Access at http://localhost:7860
 
 ### individual module pipelines
 
@@ -135,7 +161,7 @@ python scripts/grapher.py --stats-only
 .venv/bin/python scripts/code_module/code_pipeline.py
 
 # Ask questions about code specifically
-.venv/bin/python scripts/code_module/ask_question.py "How does motor control work?"
+.venv/bin/python scripts/code_module/ask_question.py "How does the control system work?"
 ```
 
 ## system architecture
@@ -286,12 +312,12 @@ each module uses a **hub-and-spoke multi-agent architecture** with specialized a
 - component classifications
 
 **typical output:**
-- 24 assemblies
-- 136 parts
-- 836 vertices
-- 1,006 relationships
+- Assemblies: 10-50 nodes
+- Parts: 50-200 nodes
+- Vertices: 500-1000 nodes
+- Relationships: 500-1500
 
-**performance:** ~40 seconds for 176MB STEP file
+**performance:** ~30-60 seconds depending on STEP file size
 
 ### 2. documentation analysis module
 
@@ -315,8 +341,8 @@ each module uses a **hub-and-spoke multi-agent architecture** with specialized a
 - page references
 
 **typical output:**
-- 21 requirements with priorities
-- 24 specifications with units/tolerances
+- Requirements: 10-30 nodes
+- Specifications: 15-40 nodes
 - high accuracy and detail
 
 **performance:** ~40-45 seconds for typical technical PDF
@@ -346,12 +372,12 @@ each module uses a **hub-and-spoke multi-agent architecture** with specialized a
 - code structure
 
 **typical output:**
-- 5 code modules analyzed
-- 9 classes documented
-- 21+ dependency relationships
+- CodeModules: 5-20 nodes
+- CodeClasses: 10-50 nodes
+- Dependencies: 10-40 relationships
 - algorithm identification
 
-**performance:** ~60 seconds per module (~5-6 minutes for 5 modules)
+**performance:** ~60 seconds per module
 
 ### 4. unified GraphRAG system
 
@@ -359,7 +385,7 @@ each module uses a **hub-and-spoke multi-agent architecture** with specialized a
 
 **capabilities:**
 - queries across CAD, documentation, and code simultaneously
-- cross-domain entity linking (e.g., motor part → motor control code → motor requirements)
+- cross-domain entity linking (e.g., hardware part → control code → functional requirements)
 - comprehensive context retrieval from all three domains
 - holistic question answering with cross-references
 
@@ -369,29 +395,29 @@ each module uses a **hub-and-spoke multi-agent architecture** with specialized a
 - CAD-to-code connections
 - multi-domain reasoning
 
-**example output:**
+**example usage:**
 
 ```
-Question: "What is the CLINGERS system and how does its hardware relate to the software?"
+Question: "How does the system architecture integrate hardware and software?"
 
 Answer:
-CLINGERS is a spacecraft docking system with the following hardware-software-requirements mapping:
+The system integrates hardware and software through the following mappings:
 
-| Hardware (CAD)        | Software (Code)      | Requirements         |
+| Hardware Component    | Software Module      | Requirements         |
 |-----------------------|----------------------|----------------------|
-| Motor Assembly        | RPO Module           | REQ-003: Docking     |
-| Camera Housing        | PNP Module           | REQ-001: Pose Est.   |
-| IR Sensors            | COMMS Module         | REQ-007: Telemetry   |
-| Gripper Mechanism     | CLINGERS_Master      | REQ-002: Capture     |
+| Actuator Assembly     | Control Module       | REQ-001: Motion      |
+| Sensor Housing        | Processing Module    | REQ-002: Sensing     |
+| Communication Unit    | Network Module       | REQ-003: Telemetry   |
+| Main Housing          | Orchestrator         | REQ-004: Integration |
 
-Execution Flow:
-1. Boot: CLINGERS_Master initializes all subsystems
-2. Approach: RPO module controls motors using PID
-3. Pose Estimation: PNP calculates relative position
-4. Docking: Gripper engages target spacecraft
-5. Verification: COMMS reports status
+System Flow:
+1. Initialization: Main orchestrator initializes subsystems
+2. Operation: Control modules interface with hardware
+3. Processing: Sensor data processed in real-time
+4. Communication: Status reported via network module
+5. Monitoring: System health tracked continuously
 
-[Cross-references to 10+ assemblies, 15 requirements, 5 code modules]
+[Cross-references include assemblies, requirements, specifications, and code modules]
 ```
 
 **performance:** ~25-45 seconds per question
@@ -468,14 +494,14 @@ the parser recursively traverses the label tree and builds a nested dictionary s
 ```python
 {
     "id": "label_1",
-    "name": "100-1_A1-ASSY",
+    "name": "Main Assembly",
     "is_assembly": True,
     "shape_type": "Assembly",
     "level": 0,
     "children": [
         {
             "id": "label_2",
-            "name": "091-1_A1-FRONT PANEL",
+            "name": "SubAssembly A",
             "is_assembly": False,
             "shape_type": "Part",
             "level": 1,
@@ -509,7 +535,7 @@ the parser recursively traverses the label tree and builds a nested dictionary s
 ```cypher
 // Hardware implementing requirements
 MATCH (p:Part), (r:Requirement)
-WHERE p.name CONTAINS 'Motor' AND r.category = 'Docking'
+WHERE p.name CONTAINS 'Motor' AND r.category = 'Control'
 RETURN p, r
 
 // Code modules related to assemblies (by name matching)
@@ -570,40 +596,41 @@ RETURN c.name, c.pattern, c.purpose
 
 ### typical knowledge graph contents
 
-after processing a complete aerospace system:
+after processing a complete engineering system:
 
 ```
 Node counts:
-- Assembly: 24
-- Part: 136
-- Vertex: 836
-- Requirement: 21
-- Specification: 24
-- CodeModule: 5
-- CodeClass: 9
+- Assembly: 10-50
+- Part: 50-200
+- Vertex: 500-1000
+- Requirement: 10-30
+- Specification: 15-40
+- CodeModule: 5-20
+- CodeClass: 10-50
 
-Total relationships: 1,050+
+Total relationships: 500-1500+
 ```
 
 ### execution times
 
-- **CAD parsing:** ~30s (176MB STEP file)
+- **CAD parsing:** ~30-60s (depends on file size)
 - **CAD graph creation:** ~10s
 - **Documentation analysis:** ~40-45s per PDF
 - **Code analysis:** ~60s per module
 - **GraphRAG query:** ~25-45s per question
+- **Complete pipeline:** ~7-8 minutes (or ~2 minutes with --skip-code)
 
 ### data quality
 
 **requirements extraction:**
 - accuracy: high
 - detail: excellent (category, priority, rationale)
-- coverage: 15-21 requirements per technical document
+- coverage: comprehensive extraction from technical documents
 
 **specifications extraction:**
 - accuracy: high
 - detail: excellent (parameter, value, unit, tolerance)
-- coverage: 24-32 specs per document
+- coverage: comprehensive technical parameter extraction
 
 **code analysis:**
 - accuracy: excellent
@@ -636,7 +663,9 @@ cadkg/
 │   │   └── ask_question.py      # Q&A CLI
 │   │
 │   ├── integrated_pipeline.py   # CAD + Docs pipeline
-│   └── unified_graphrag.py      # Unified cross-domain Q&A
+│   ├── unified_graphrag.py      # Unified cross-domain Q&A
+│   ├── chat_interface.py        # Gradio web chat UI
+│   └── run_complete_pipeline.py # Complete pipeline orchestrator
 │
 ├── data/
 │   ├── cad/                     # STEP CAD files
@@ -807,15 +836,9 @@ to add new node types to the knowledge graph:
 - [PyMuPDF](https://pymupdf.readthedocs.io/) - PDF processing
 - [STEP ISO 10303](https://www.iso.org/standard/63141.html) - CAD file format standard
 
-## citation
+## license
 
-if you use cadKG in your research or project, please cite:
-
-```
-cadKG: Integrated Knowledge Graph & GraphRAG System
-Multi-agent framework for CAD, documentation, and code analysis
-https://github.com/your-org/cadkg
-```
+This project is provided as-is for research and development purposes.
 
 ## status
 
